@@ -1,4 +1,4 @@
-## Matrikkel proxy
+# Matrikkel proxy
 
 Dette repoet inneholder en custom versjon av [httpd](https://hub.docker.com/_/httpd) som brukes til internruting mellom matrikkelens ulike applikasjoner på SKIP.
 
@@ -8,7 +8,7 @@ Den custom versjonen har følgende egenskaper:
 * Inkluderer en custom [httpd.conf](./httpd.conf)
 * Inkluderer en (optional) config-fil fra `/tmp/apache/httpd.conf`. Denne konkrete filen blir mountet inn fra et config map via [heimdall-apps](https://github.com/kartverket/heimdall-apps) når matrikkel-proxy blir deployet til SKIP.
 
-### Bygging og kjøring lokalt
+## Bygging og kjøring lokalt
 
 For å teste matrikkel-proxy lokalt er det enkleste å bygge med docker compose.
 
@@ -33,3 +33,13 @@ HTTP 200 OK
 
 {"status": "up"}
 ```
+
+## Release
+
+Det bygges automatisk en ny release ved push til `main`. Under bygging skjer følgende:
+
+1. Ny versjon beregnes automatisk basert på forrige tag og de nyeste commit-meldingene.
+   Det benyttes en action [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) for dette. Se dens dokumentasjon for hvordan man kan overstyre/tilpasse versjonsnummer.
+2. Commit-en som blir bygget blir tag-et med med versjonnummeret fra 1. og et docker image med samme tag blir blir pushet.
+3. Docker image blir deployet til dev (via ArgoCD) og dette bygget kan videre promoteres til test og produksjon ved hjelp gjenbrukbare actions i [heimdall-apps](https://github.com/kartverket/heimdall-apps).
+
