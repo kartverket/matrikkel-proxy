@@ -2,7 +2,7 @@
 
 services:
   matrikkel-proxy:
-    image: ghcr.io/kartverket/matrikkel-proxy:latest
+    image: matrikkel-proxy-local:latest
     build:
       dockerfile: Dockerfile
     ports:
