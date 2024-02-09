@@ -20,7 +20,7 @@ on:
 
 env:
   registry: ghcr.io
-  image_name: kartverket/matrikkel-proxy-testversjon
+  image_name: kartverket/matrikkel-proxy
 
 jobs:
   build:
