@@ -5,6 +5,8 @@ services:
     image: matrikkel-proxy-local:latest
     build:
       dockerfile: Dockerfile
+    volumes:
+      - ${PWD}/local-httpd.conf:/tmp/apache/httpd.conf
     ports:
       - "8084:8080"
       - "8085:8081"

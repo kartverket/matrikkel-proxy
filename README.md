@@ -7,6 +7,7 @@ Den custom versjonen har følgende egenskaper:
 * Legger til en egen bruker `apprunner` med UID 150 som gjør at man kan kjøre imaget uten å være root og som er i henhold til SKIP sine krav.
 * Inkluderer en custom [httpd.conf](./httpd.conf)
 * Inkluderer en (optional) config-fil fra `/tmp/apache/httpd.conf`. Denne konkrete filen blir mountet inn fra et config map via [heimdall-apps](https://github.com/kartverket/heimdall-apps) når matrikkel-proxy blir deployet til SKIP.
+* For lokal kjøring/testing blir filen [local-httpd.conf](./local-httpd.conf) mountet inn til `/tmp/apache/httpd.conf` og inneholder en enkel ruting regel som ruter all trafikk til `http://localhost:8081`.
 
 ## Bygging og kjøring lokalt
 
@@ -22,8 +23,10 @@ For å kjøre opp keycloak lokalt kan man benytte:
 docker compose up
 ```
 
-Matrikkel-proxy er da tilgjengelig på [http://localhost:8084](http://localhost:8084). Siden det ikke er definert noen gyldige retur-response, eller ProxyPass regler som standard,
-vil forventet default respons være `HTTP 403 Forbidden`. 
+Matrikkel-proxy er da tilgjengelig på [http://localhost:8084](http://localhost:8084).
+Hvis man f.eks. har matrikkelen kjørende lokalt på port 8081 bør landingssiden til matrikkelen bli vist (basert på proxyregel i [local-httpd.conf](./local-httpd.conf).
+
+Hvis man derimot ikke har noe kjørende på port 8081 vil forventet respons være HTTP 503 (Service Unavailable). 
 
 Readiness-endepunktet (som brukes av SKIP/Kubernetes) er tilgjengelig på en egen port på [http://localhost:8085/readiness](http://localhost:8085/readiness). 
 Forventet svar fra dette endepunktet er:
