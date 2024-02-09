@@ -2,7 +2,7 @@
 
 Dette repoet inneholder en custom versjon av [httpd](https://hub.docker.com/_/httpd) som brukes til internruting mellom matrikkelens ulike applikasjoner på SKIP.
 
-Den custom versjonen har følgende egenskaper:
+Denne custom versjonen har følgende egenskaper:
 
 * Legger til en egen bruker `apprunner` med UID 150 som gjør at man kan kjøre imaget uten å være root og som er i henhold til SKIP sine krav.
 * Inkluderer en custom [httpd.conf](./httpd.conf)
