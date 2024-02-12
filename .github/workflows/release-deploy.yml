@@ -31,13 +31,13 @@ jobs:
           image_url: ${{ needs.build.outputs.image_url }}
           allow_severity_level: critical
 
-  # deploy-dev:
-  #   needs: [pharos, build]
-  #   uses: kartverket/heimdall-apps/.github/workflows/release-app.yml@main
-  #   with:
-  #     namespace: matrikkel-main
-  #     application: matrikkel-proxy
-  #     version: ${{ needs.build.outputs.version }}
-  #     deploy_dev: true
-  #   secrets:
-  #     PAT_TOKEN: ${{ secrets.PAT_TOKEN_RW_REPO_PACKAGES }}
+  deploy-dev:
+    needs: [pharos, build]
+    uses: kartverket/heimdall-apps/.github/workflows/release-app.yml@main
+    with:
+      namespace: matrikkel-main
+      application: matrikkel-proxy
+      version: ${{ needs.build.outputs.version }}
+      deploy_dev: true
+    secrets:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN_RW_REPO_PACKAGES }}
