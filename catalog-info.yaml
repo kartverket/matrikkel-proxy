@@ -1,0 +1,56 @@
+# nonk8s
+apiVersion: "backstage.io/v1alpha1"
+kind: "Component"
+metadata:
+  name: "matrikkel-proxy"
+  tags:
+  - "public"
+spec:
+  type: "service"
+  lifecycle: "production"
+  owner: "heimdall"
+  system: "matrikkel"
+  providesApis:
+  - "matrikkel-proxy-api"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Group"
+metadata:
+  name: "security_champion_matrikkel-proxy"
+  title: "Security Champion matrikkel-proxy"
+spec:
+  type: "security_champion"
+  parent: "eiendom_security_champions"
+  members:
+  - "lislei"
+  children:
+  - "resource:matrikkel-proxy"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Resource"
+metadata:
+  name: "matrikkel-proxy"
+  links:
+  - url: "https://github.com/kartverket/matrikkel-proxy"
+    title: "matrikkel-proxy på GitHub"
+spec:
+  type: "repo"
+  owner: "security_champion_matrikkel-proxy"
+  dependencyOf:
+  - "component:matrikkel-proxy"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "API"
+metadata:
+  name: "matrikkel-proxy-api"
+  tags:
+  - "public"
+spec:
+  type: "openapi"
+  lifecycle: "production"
+  owner: "heimdall"
+  definition: |
+    openapi: "3.0.0"
+    info:
+        title: matrikkel-proxy API
+    paths:
