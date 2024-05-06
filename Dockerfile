@@ -1,4 +1,4 @@
-FROM httpd:2.4.58-alpine3.19@sha256:5f3c87973b3e76601b2f4d8832d6075e272868815e4966d2e57823591f8da29f
+FROM httpd:2.4.59-alpine3.19@sha256:6b242338c5c497fef59963d961e1f224262fc313482943cdf16b1875da26836f
 
 LABEL builder.cleanup.policy=matrikkelen
 
