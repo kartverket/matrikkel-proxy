@@ -38,19 +38,3 @@ spec:
   owner: "security_champion_matrikkel-proxy"
   dependencyOf:
   - "component:matrikkel-proxy"
----
-apiVersion: "backstage.io/v1alpha1"
-kind: "API"
-metadata:
-  name: "matrikkel-proxy-api"
-  tags:
-  - "public"
-spec:
-  type: "openapi"
-  lifecycle: "production"
-  owner: "heimdall"
-  definition: |
-    openapi: "3.0.0"
-    info:
-        title: matrikkel-proxy API
-    paths:
