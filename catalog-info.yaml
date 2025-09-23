@@ -11,7 +11,7 @@ spec:
   owner: heimdall
   system: matrikkel
   providesApis:
-  - "matrikkel-proxy-api"
+  - "matrikkel-api"
 ---
 apiVersion: "backstage.io/v1alpha1"
 kind: API
