@@ -11,14 +11,15 @@ spec:
   owner: heimdall
   system: matrikkel
   providesApis:
-  - "matrikkel-api"
+  - "matrikkel-proxy-api"
 ---
-apiVersion: "backstage.io/v1alpha1"
+apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: matrikkel-proxy-api
+  description: Brukes til internruting mellom matrikkelens ulike applikasjoner på SKIP.
 spec:
-  type: openapi
+  type: other
+  lifecycle: production
   owner: heimdall
   system: matrikkel
-  lifecycle: production
