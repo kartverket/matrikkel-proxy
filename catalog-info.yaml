@@ -3,23 +3,11 @@ apiVersion: "backstage.io/v1alpha1"
 kind: Component
 metadata:
   name: "matrikkel-proxy"
+  description: Brukes til internruting mellom matrikkelens ulike applikasjoner på SKIP.
   tags:
   - "public"
 spec:
   type: service
-  lifecycle: production
-  owner: heimdall
-  system: matrikkel
-  providesApis:
-  - "matrikkel-proxy-api"
----
-apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: matrikkel-proxy-api
-  description: Brukes til internruting mellom matrikkelens ulike applikasjoner på SKIP.
-spec:
-  type: other
   lifecycle: production
   owner: heimdall
   system: matrikkel
