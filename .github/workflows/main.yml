@@ -219,3 +219,34 @@ jobs:
           kubernetes_project_id: ${{ env.PROD_KUBERNETES_PROJECT_ID }}
           service_account: ${{ env.PROD_SERVICE_ACCOUNT }}
           workload_identity_provider: ${{ env.PROD_WORKLOAD_IDENTITY_PROVIDER }}
+
+  deploy-remaining-environments:
+    name: Deploy to remaining environments
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - version
+      - deploy-prod
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Deploy matrikkel-proxy to remaining environments
+        uses: kartverket/matrikkel-actions/apps-repo-deploy@main
+        env:
+          version: ${{ needs.version.outputs.version }}
+        with:
+          apps:
+            atkv3-dev:matrikkel-releasetest:matrikkel-proxy:${{ env.version }}
+            
+            atkv3-prod:matrikkel-foringsenheten:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-kommunetest:matrikkel-proxy:${{ env.version }}
+            
+            atkv3-prod:matrikkel-kurs-1:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-kurs-2:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-kurs-3:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-kurs-norconsult:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-kurs-norkart:matrikkel-proxy:${{ env.version }}
+            
+            atkv3-prod:matrikkel-simtest:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-sitfor:matrikkel-proxy:${{ env.version }}
