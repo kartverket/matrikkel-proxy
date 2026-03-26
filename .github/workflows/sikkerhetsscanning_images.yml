@@ -9,7 +9,6 @@ env:
     registry: ghcr.io
 
 jobs:
-
     pharos:
         name: Run Pharos
         strategy:
@@ -45,7 +44,7 @@ jobs:
                     ')
                   
                   if [ -z "$TAG" ]; then
-                    echo "Fant ingen brukbare image-tagger!"
+                    echo "Fant ingen brukbare image-tagger"
                     exit 1
                   fi
                   
@@ -56,4 +55,4 @@ jobs:
               with:
                 trivy_category: ${{ matrix.package-name }}
                 disable_severity_check: 'true' # Ikke blokker byggeløyper ved evt sårbarheter!
-                image_url: ${{ env.registry }}/${{ github.repository_owner }}/${{ matrix.package-name }}:${{ steps.latest.outputs.tag }}
+                image_url: ghcr.io/kartverket/${{ matrix.package-name }}:${{ steps.latest.outputs.tag }}
