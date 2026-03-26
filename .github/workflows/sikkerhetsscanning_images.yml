@@ -6,7 +6,8 @@ on:
         - cron: '00 1 * * *'  # 01:00 each day.
 
 env:
-    registry: ghcr.io
+-env:
+-registry: ghcr.io
 
 jobs:
     pharos:
