@@ -9,6 +9,7 @@ env:
     registry: ghcr.io
 
 jobs:
+
     pharos:
         name: Run Pharos
         strategy:
@@ -23,9 +24,36 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   name: Run Pharos
-                uses: kartverket/pharos@599d3fe4af8bae19fbfda831662e90ee1c406ec2 # v0.6.3
-                with:
-                    trivy_category: ${{ matrix.package-name }}
-                    disable_severity_check: 'true' # Ikke blokker byggeløyper ved evt sårbarheter!
-                    image_url: ${{ env.registry }}/${{ github.repository_owner }}/${{ matrix.package-name }}:latest
+            - name: Finn siste GHCR image-tag
+              id: latest
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  OWNER: ${{ github.repository_owner }}
+                  IMAGE: ${{ matrix.package-name }}
+              run: |
+                  echo "Henter siste tag for $IMAGE ..."
+                  
+                  TAG=$(gh api \
+                    -H "Accept: application/vnd.github+json" \
+                    "/orgs/$OWNER/packages/container/$IMAGE/versions" \
+                    --paginate \
+                    --jq '
+                      map(select(.metadata.container.tags | length > 0))
+                      | sort_by(.created_at)
+                      | reverse
+                      | .[0].metadata.container.tags[0]
+                    ')
+                  
+                  if [ -z "$TAG" ]; then
+                    echo "Fant ingen brukbare image-tagger!"
+                    exit 1
+                  fi
+                  
+                  echo "Fant tag: $TAG"
+                  echo "tag=$TAG" >> $GITHUB_OUTPUT
+            - name: Run Pharos
+              uses: kartverket/pharos@599d3fe4af8bae19fbfda831662e90ee1c406ec2 # v0.6.3
+              with:
+                trivy_category: ${{ matrix.package-name }}
+                disable_severity_check: 'true' # Ikke blokker byggeløyper ved evt sårbarheter!
+                image_url: ${{ env.registry }}/${{ github.repository_owner }}/${{ matrix.package-name }}:${{ steps.latest.outputs.tag }}
