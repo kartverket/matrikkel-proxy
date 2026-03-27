@@ -236,7 +236,7 @@ jobs:
         env:
           version: ${{ needs.version.outputs.version }}
         with:
-          apps:
+          apps: |
             atkv3-dev:matrikkel-releasetest:matrikkel-proxy:${{ env.version }}
             
             atkv3-prod:matrikkel-foringsenheten:matrikkel-proxy:${{ env.version }}
