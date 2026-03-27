@@ -5,16 +5,9 @@ on:
     schedule:
         - cron: '00 1 * * *'  # 01:00 each day.
 
-env:
-    registry: ghcr.io
-
 jobs:
     pharos:
         name: Run Pharos
-        strategy:
-            fail-fast: false    # De andre jobbene i matrisen vil kjøre selv om en av dem feiler
-            matrix:
-                package-name: [ 'matrikkel-proxy' ]
         permissions:
             actions: read
             packages: read
@@ -23,9 +16,15 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   name: Run Pharos
-                uses: kartverket/pharos@599d3fe4af8bae19fbfda831662e90ee1c406ec2 # v0.6.3
-                with:
-                    trivy_category: ${{ matrix.package-name }}
-                    disable_severity_check: 'true' # Ikke blokker byggeløyper ved evt sårbarheter!
-                    image_url: ${{ env.registry }}/${{ github.repository_owner }}/${{ matrix.package-name }}:latest
+            - name: Finn siste GHCR image-tag
+              id: latest
+              uses: kartverket/matrikkel-actions/find-latest-image@main
+              with:
+                  image: matrikkel-proxy # GHCR pakkenavn
+
+            - name: Run Pharos
+              uses: kartverket/pharos@599d3fe4af8bae19fbfda831662e90ee1c406ec2 # v0.6.3
+              with:
+                trivy_category: matrikkel-proxy
+                disable_severity_check: 'true' # Ikke blokker byggeløyper ved evt sårbarheter!
+                image_url: ghcr.io/kartverket/matrikkel-proxy:${{ steps.latest.outputs.tag }}

@@ -84,7 +84,7 @@ jobs:
       security-events: write
     steps:
       - name: "Run Pharos"
-        uses: kartverket/pharos@v0.5.0
+        uses: kartverket/pharos@599d3fe4af8bae19fbfda831662e90ee1c406ec2 # v0.6.3
         with:
           image_url: ${{ needs.version.outputs.image }}
           trivy: true
