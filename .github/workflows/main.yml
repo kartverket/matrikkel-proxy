@@ -106,6 +106,7 @@ jobs:
       - name: Deploy matrikkel-proxy to dev
         uses: kartverket/matrikkel-actions/apps-repo-deploy@main
         with:
+          identity: 'matrikkel-proxy'
           apps: |
             atkv3-dev:matrikkel-main:matrikkel-proxy:${{ needs.version.outputs.version }}
       - name: Verify deployment to dev
@@ -134,6 +135,7 @@ jobs:
       - name: Deploy matrikkel-proxy to QA environments
         uses: kartverket/matrikkel-actions/apps-repo-deploy@main
         with:
+          identity: 'matrikkel-proxy'
           apps: |
             atkv3-prod:matrikkel-betatest:matrikkel-proxy:${{ needs.version.outputs.version }}
             atkv3-prod:matrikkel-prodtest:matrikkel-proxy:${{ needs.version.outputs.version }}
@@ -167,6 +169,7 @@ jobs:
         id: slack_notify
         uses: kartverket/matrikkel-actions/slack-approval-notifier/setup-octo@main
         with:
+          identity: 'matrikkel-proxy'
           channel: ${{ env.SLACK_CHANNEL }}
           environment: 'produksjon'
           appDescriptor: atkv3-prod:matrikkel-main:matrikkel-proxy:${{ needs.version.outputs.version }}
@@ -191,6 +194,7 @@ jobs:
       - name: Notify slack (Update)
         uses: kartverket/matrikkel-actions/slack-approval-notifier/update-octo@main
         with:
+          identity: 'matrikkel-proxy'
           channel: ${{ env.SLACK_CHANNEL }}
           environment: 'produksjon'
           appDescriptor: atkv3-prod:matrikkel-main:matrikkel-proxy:${{ needs.version.outputs.version }}
@@ -203,6 +207,7 @@ jobs:
       - name: Deploy matrikkel-proxy to production
         uses: kartverket/matrikkel-actions/apps-repo-deploy@main
         with:
+          identity: 'matrikkel-proxy'
           apps: |
             atkv3-prod:matrikkel-main:matrikkel-proxy:${{ needs.version.outputs.version }}
             atkv3-prod:matrikkel-nd:matrikkel-proxy:${{ needs.version.outputs.version }}
@@ -236,6 +241,7 @@ jobs:
         env:
           version: ${{ needs.version.outputs.version }}
         with:
+          identity: 'matrikkel-proxy'
           apps: |
             atkv3-dev:matrikkel-releasetest:matrikkel-proxy:${{ env.version }}
             
