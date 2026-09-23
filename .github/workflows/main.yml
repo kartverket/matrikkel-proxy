@@ -207,8 +207,6 @@ jobs:
           identity: 'matrikkel-proxy'
           apps: |
             atkv3-prod:matrikkel-main:matrikkel-proxy:${{ needs.version.outputs.version }}
-            atkv3-prod:matrikkel-nd:matrikkel-proxy:${{ needs.version.outputs.version }}
-            atkv3-prod:matrikkel-se-eiendom:matrikkel-proxy:${{ needs.version.outputs.version }}
       - name: Verify deployment to production
         if: false # Disabler sjekken her mens vi venter på at vi kan skru på auto-sync i argo
         uses: kartverket/matrikkel-actions/k8s-deployment-feedback@main
@@ -216,8 +214,6 @@ jobs:
           cluster: ${{ env.PROD_CLUSTER_NAME }}
           apps: |
             matrikkel-main:matrikkelproxy:${{ needs.version.outputs.version }}
-            matrikkel-nd:matrikkelproxy:${{ needs.version.outputs.version }}
-            matrikkel-se-eiendom:matrikkelproxy:${{ needs.version.outputs.version }}
           kubernetes_project_id: ${{ env.PROD_KUBERNETES_PROJECT_ID }}
           service_account: ${{ env.PROD_SERVICE_ACCOUNT }}
           workload_identity_provider: ${{ env.PROD_WORKLOAD_IDENTITY_PROVIDER }}
