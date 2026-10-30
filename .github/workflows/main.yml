@@ -249,3 +249,4 @@ jobs:
             
             atkv3-prod:matrikkel-simtest:matrikkel-proxy:${{ env.version }}
             atkv3-prod:matrikkel-sitfor:matrikkel-proxy:${{ env.version }}
+            atkv3-prod:matrikkel-komreg:matrikkel-proxy:${{ env.version }}
