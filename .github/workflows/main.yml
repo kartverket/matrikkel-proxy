@@ -30,6 +30,7 @@ jobs:
       should_tag_and_deploy: ${{ steps.version-string.outputs.should_tag_and_deploy }}
 
     steps:
+      - uses: actions/checkout@v7
       - name: Generate version string
         id: version-string
         shell: bash
