@@ -6,3 +6,6 @@ LABEL builder.cleanup.policy=matrikkelen
 ENV TZ=Europe/Oslo
 
 COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+
+# Samme bruker som DHI-imaget bruker som standard (www-data).
+USER 65532
