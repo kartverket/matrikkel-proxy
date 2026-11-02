@@ -47,12 +47,12 @@ jobs:
             echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}" >> "$GITHUB_OUTPUT"
             echo "should_tag_and_deploy=true" >> $GITHUB_OUTPUT
           elif [[ ${{github.event_name}} == 'workflow_dispatch' ]]; then
-            echo "version=${version}" >> "$GITHUB_OUTPUT"
-            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}" >> "$GITHUB_OUTPUT"
+            echo "version=${version}-wd" >> "$GITHUB_OUTPUT"
+            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}-wd" >> "$GITHUB_OUTPUT"
             echo "should_tag_and_deploy=true" >> $GITHUB_OUTPUT
           elif [[ ${{github.event_name}} == 'pull_request' ]]; then
-            echo "version=${version}" >> "$GITHUB_OUTPUT"
-            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}" >> "$GITHUB_OUTPUT"
+            echo "version=${version}-pr" >> "$GITHUB_OUTPUT"
+            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}-pr" >> "$GITHUB_OUTPUT"
             echo "should_tag_and_deploy=false" >> $GITHUB_OUTPUT 
           else
             echo "Kunne ikke finne ut hva slags bygg som er ment (burde aldri skje)"
