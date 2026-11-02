@@ -88,7 +88,7 @@ jobs:
           image: ${{ needs.version.outputs.image }}
         with:
           context: .
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
           tags: ${{ env.image }}
 
       - name: Tag commit med artifaktversjon
