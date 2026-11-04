@@ -2,6 +2,9 @@ name: Deploy to All Environments
 
 on:
   push:
+    branches:
+      - 'main'
+  pull_request:
   workflow_dispatch:
 
 env:
@@ -27,15 +30,33 @@ jobs:
     outputs:
       version: ${{ steps.version-string.outputs.version }}
       image: ${{ steps.version-string.outputs.image }}
+      should_tag_and_deploy: ${{ steps.version-string.outputs.should_tag_and_deploy }}
 
     steps:
+      - uses: actions/checkout@v7
       - name: Generate version string
         id: version-string
         shell: bash
         run: |
-          version="$(date -u '+%Y.%m.%d-%H.%M')-$(echo "${GITHUB_SHA}" | cut -c1-7)"
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}" >> "$GITHUB_OUTPUT"
+          current_time="$(date '+%Y.%m.%d-%H.%M')"
+          git_short_sha=$(git rev-parse --short $GITHUB_SHA)
+          version="${current_time}-${git_short_sha}"
+          
+          if [[ ${{github.event_name}} == 'push' ]]; then
+            echo "version=${version}" >> "$GITHUB_OUTPUT"
+            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}" >> "$GITHUB_OUTPUT"
+            echo "should_tag_and_deploy=true" >> $GITHUB_OUTPUT
+          elif [[ ${{github.event_name}} == 'workflow_dispatch' ]]; then
+            echo "version=${version}-wd" >> "$GITHUB_OUTPUT"
+            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}-wd" >> "$GITHUB_OUTPUT"
+            echo "should_tag_and_deploy=true" >> $GITHUB_OUTPUT
+          elif [[ ${{github.event_name}} == 'pull_request' ]]; then
+            echo "version=${version}-pr" >> "$GITHUB_OUTPUT"
+            echo "image=ghcr.io/kartverket/matrikkel-proxy:${version}-pr" >> "$GITHUB_OUTPUT"
+            echo "should_tag_and_deploy=false" >> $GITHUB_OUTPUT 
+          else
+            echo "Kunne ikke finne ut hva slags bygg som er ment (burde aldri skje)"
+          fi
 
   package-image:
     name: Build and (conditionally) Push Docker Image
@@ -50,28 +71,38 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Login to GitHub Container Registry
-        if: github.ref == 'refs/heads/main'
+        if: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to dhi.io
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: dhi.io
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build Docker image
         uses: docker/build-push-action@v7
         env:
           image: ${{ needs.version.outputs.image }}
         with:
           context: .
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
           tags: ${{ env.image }}
+
       - name: Tag commit med artifaktversjon
+        if: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
         run: |
           git tag ${{ needs.version.outputs.version }}
           git push origin ${{ needs.version.outputs.version }}
 
   pharos:
     name: Run Pharos
-    if: github.ref == 'refs/heads/main'
+    if: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
     runs-on: ubuntu-latest
     needs:
       - version
@@ -93,7 +124,7 @@ jobs:
   deploy-dev:
     name: Deploy to Dev
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: ${{ needs.version.outputs.should_tag_and_deploy == 'true' }}
     needs:
       - version
       - package-image

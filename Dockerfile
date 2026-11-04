@@ -1,20 +1,11 @@
-FROM httpd:2.4.69-alpine@sha256:759a1d9178d351185978e41be37a3e91675a4ddc0653aa5df493cfd4c67e24ec
+FROM dhi.io/httpd:2.4.69-debian13@sha256:7b8d0f5d79fc1bbdca9c6253c101fdd9352fea54179063e53ad15d9b3772d01c
 
 LABEL builder.cleanup.policy=matrikkelen
 
-RUN apk add --no-cache tzdata
+# DHI-imaget er minimalt (ingen shell/pakkebehandler), inkluderer tzdata og kjører som ikke-root
 ENV TZ=Europe/Oslo
-
-#Bruker som skal kjøre appen, trenger ikke ROOT-rettigheter
-ENV USER_ID=150 USER_NAME=apprunner
 
 COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 
-RUN apk --no-cache upgrade \
-    && addgroup -g ${USER_ID} -S ${USER_NAME} \
-    && adduser -u ${USER_ID} -S ${USER_NAME} -G ${USER_NAME} \
-    && chgrp ${USER_NAME} /usr/local/apache2/conf/httpd.conf\
-    && chmod 640 /usr/local/apache2/conf/httpd.conf\
-    && chown ${USER_ID} /usr/local/apache2/logs/
-
-USER ${USER_NAME}
+# Samme bruker som DHI-imaget bruker som standard (www-data).
+USER 65532
