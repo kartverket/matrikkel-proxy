@@ -1,4 +1,4 @@
-FROM dhi.io/httpd:2.4.71-debian13@sha256:890876ce73e88cb49a698c808878aacfd578cc9cc0df82bc36d91a1fb0046122
+FROM dhi.io/httpd:2.4.71-debian13@sha256:2695dc10ef403a9bd4eb5c67a7206945c48f5180111277ba70756a46735603f1
 
 LABEL builder.cleanup.policy=matrikkelen
 
